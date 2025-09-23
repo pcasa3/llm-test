@@ -1,0 +1,142 @@
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta name="renderer" content="webkit" />
+
+<title>RAG 技术 2025 展望：从检索生成到 Agentic RAG 的系统演进</title>
+
+  <meta content="RAG 技术 2025 展望：从检索生成到 Agentic RAG 的系统演进" name="description"/>
+  <link href="https://www.tothefore.cn/ai-tech/ai_tech_003.htm" rel="canonical"/>
+  <meta content="RAG 技术 2025 展望：从检索生成到 Agentic RAG 的系统演进 " property="og:title"/>
+  <meta content="article" property="og:type"/>
+  <meta content="https://www.tothefore.cn/ai-tech/ai_tech_003.htm" property="og:url"/>
+  <meta content="ToTheFore" property="og:site_name"/>
+  <script type="application/ld+json">
+   {"@context":"https://schema.org","@type":"Article","headline":"RAG 技术 2025 展望：从检索生成到 Agentic RAG 的系统演进","description":"RAG 技术 2025 展望：从检索生成到 Agentic RAG 的系统演进 ","datePublished":"2025-09-23T10:51:55Z","dateModified":"2025-09-23T10:51:55Z","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.tothefore.cn/ai-tech/ai_tech_003.htm"},"publisher":{"@type":"Organization","name":"ToTheFore"}}
+  </script>
+
+<script>
+(function(){
+var el = document.createElement("script");
+el.src = "https://lf1-cdn-tos.bytegoofy.com/goofy/ttzz/push.js?58a3a397c1380bb96378f100dff48d753347a9564311e126552993053878eda6bc434964556b7d7129e9b750ed197d397efd7b0c6c715c1701396e1af40cec962b8d7c8c6655c9b00211740aa8a98e2e";
+el.id = "ttzz";
+var s = document.getElementsByTagName("script")[0];
+s.parentNode.insertBefore(el, s);
+})(window)
+</script>
+
+</head>
+<body>
+
+<h1>RAG 技术 2025 展望：从检索生成到 Agentic RAG 的系统演进 </h1>
+核心结论：RAG（Retrieval-Augmented Generation，检索增强生成）技术正经历深刻变革，不再是简单的“检索→生成”流程，而是演化为一套由多智能体（Agentic）驱动、知识图谱（Graph/Knowledge）强化、支持多模态文档理解并具备可量化评估能力的认知协作平台。这种新范式在复杂推理、多跳检索、长文档证据召回以及垂直领域专业化等方面，涌现出可复用的工程实践（如 GraphRAG/KAG/HiChunk + HiCBench/RAGAS），并随着各大云平台提供的可视化编排和节点化工作流，逐步渗透到企业级应用交付层面。([Microsoft][1])<br>
+RAG 技术在 2025 年的关键趋势是向 Agentic RAG 演进，即构建一个多智能体协同的认知协作平台。这一趋势体现在 xAI 的 Grok-4 Heavy 在 HLE 基准测试中的表现，以及腾讯云 Agent Development Platform 3.0 等工程实践中。多智能体架构通过任务分解、检索、证据对齐和答案裁决等角色分工，提升复杂推理的准确率。同时，GraphRAG 和 KAG 等技术将知识图谱与 RAG 结合，增强了 RAG 在跨文档、跨主题洞察以及强规则、逻辑约束场景下的能力。此外，多模态文档理解和 HiChunk 等技术则分别解决了 RAG 在处理图表、表格等非结构化数据以及长文档切分方面的挑战。<br>
+
+<h2>01 多智能体（Agentic）协同：从线性流水线到“任务-工具-裁决”自治系统</h2>
+传统 RAG 的线性流程正被打破，取而代之的是多智能体协同的自治系统。<br>
+行业趋势：xAI 公司的 Grok-4 Heavy 模型在 Humanity’s Last Exam (HLE) 基准测试中，利用多智能体与工具链实现了 44.4% 的成绩，显著优于单智能体模型。这一结果突显了“多体协作 + 工具调用”架构的优势。([DataCamp][2])<br>
+学术研究：2024 年的多智能体辩论（MAD）及多样化思维辩论（Diverse MAD）研究，以及 2025 年的 Free-MAD/DMAD 等工作均表明，多体辩论 + 角色分工 + LLM-as-Judge 的模式能够系统性地提高复杂推理的正确率。然而，这种架构也带来了 Token 成本上升以及一致性/裁决策略设计等新挑战。([ACM Digital Library][3])<br>
+工程实践：通过将传统 RAG 的“检索—阅读—生成”流程分解为任务分解 Agent、检索/SQL/浏览 Agent、证据对齐 Agent、答案裁决/自检 Agent 等角色，并由编排器/工作流 统筹回合数与工具预算，同时将“证据充分性”纳入裁决准则，可以构建更强大的 RAG 系统。例如，腾讯云 Agent Development Platform 3.0 在工作流层面引入了 Agent 节点、数据库节点、异步/队列 等能力，降低了此类架构的实施门槛。([腾讯云][4])<br>
+ 实践要点：多智能体架构的核心在于构建推理-检索-裁决三段式闭环，而非简单地堆砌模型。同时，需要将工具预算与回合停止准则 作为可观测参数，并利用 HLE/ARC-AGI 等“工具型推理”基准进行回归测试。([DataCamp][2])<br>
+
+<h2>02 GraphRAG 与 KAG：融合“相关性”与“因果/逻辑关系”</h2>
+GraphRAG 和 KAG 技术通过引入知识图谱，弥补了传统 RAG 在处理复杂关系和逻辑推理方面的不足。<br>
+GraphRAG（微软）：该方法利用 LLM 从语料中抽取实体-关系图，并通过层级聚类形成“主题→子主题”社区，从而实现全局/局部两级检索与摘要。在“跨文档、跨主题”的复杂问答场景中，GraphRAG 优于纯向量检索。微软提供的开源实现和研究博文详细介绍了其索引/查询管线。([Microsoft][5])<br>
+KAG（蚂蚁×浙大系）：KAG 提出知识图谱↔原文块互索引 以及 逻辑式混合推理引擎 的概念，在 2Wiki/HotpotQA 等多跳数据集上表现出显著优势，并在电子政务/医疗问答等领域验证了其落地价值。KAG 的关键在于将数值/时序/规约 等强逻辑约束纳入推理过程。([arXiv][6])<br>
+Youtu-GraphRAG（腾讯优图）：腾讯优图在 2025 年 8 月发布的纵向统一范式 尝试将图构建、图检索与代理式协作联动，强调在域迁移下的稳健性 与 真实业务可维护性，并已开源代码库。([arXiv][7])<br>
+ 技术选型建议：<br>
+ 
+对于主题/跨文档洞察需求，选择 GraphRAG；<br>
+对于存在强规则/逻辑以及结构化图谱积累的场景，选择 KAG；<br>
+对于需要将图谱与多智能体编排 结合的企业工程，关注 Youtu-GraphRAG。([Microsoft][5])<br>
+
+与传统 RAG 相比，GraphRAG 和 KAG 的优势在于能够处理更复杂的关系和逻辑推理。例如，在电子政务领域，KAG 可以利用法规、流程等知识图谱，更准确地回答用户关于政策法规的问题。而在医疗领域，GraphRAG 可以将医学实体、权威词表和外部证据与院内语料结合，提供更全面、可靠的医学知识。<br>
+
+<h2>03 多模态文档理解：从文本到结构与关系的理解</h2>
+多模态文档理解技术使 RAG 能够处理包含文本、图片、表格和公式等多种信息类型的文档，从而扩展了 RAG 的应用范围。<br>
+统一多模态 RAG：香港大学团队推出的 RAG-Anything (对接 LightRAG 生态) 能够对文本-图片-表格-公式 进行统一解析与检索，解决了传统文本 RAG 在处理“图表趋势/表格极值/公式语义”等问题上的局限性。([GitHub][8])<br>
+表格/版面解析的产业进展：针对合并单元格、非规则表格、跨页表格 等难题，2025 年的学术界和产业界评测持续发展 (如 MonkeyOCR/Doc-AI 方向)，整体趋势是结构识别 + 文本识别 + 关系建模 三位一体，以便 RAG 检索层能够直接利用结构化证据。([arXiv][9])<br>
+ 落地建议：在索引前置 阶段进行“版面→表格结构→键值关系”抽取，并将结构化单元 而非整页图片作为检索粒度，从而提高证据密度和可解释性。([GitHub][8])<br>
+通过多模态文档理解，RAG 可以更好地理解文档的整体结构和内容，从而提供更准确、全面的答案。例如，在金融领域，RAG 可以解析包含财务报表、图表和文本的研报，帮助分析师快速获取关键信息。<br>
+
+<h2>04 “切分”的重新定义：HiChunk + HiCBench 实现可评测的文档分块</h2>
+文档切分是 RAG 中的关键步骤，直接影响检索效果。HiChunk 和 HiCBench 等技术通过分层语义树和自适应合并等方法，提高了文档切分的质量，并提供了可量化的评估指标。<br>
+问题根源：传统的 Top-k 检索 + 固定粒度分块方法容易导致证据割裂/上下文不连贯，进而引发幻觉或链路中断。<br>
+HiChunk/HiCBench（腾讯优图）：HiChunk 提出分层语义树 和 Auto-Merge 检索方法，实现按需自适应合并 层级节点。HiCBench 则填补了“切分质量” 评估的空白，通过多级切分点标注和证据稠密 QA，实现了对切分质量的量化评估。最新的论文和解读表明，HiChunk 在证据稠密场景下显著优于常规切分方法，而在稀疏场景下不会劣化基线性能。([arXiv][10])<br>
+ 实践清单：<br>
+ 
+首先运行 HiCBench 选择最佳分块策略；<br>
+结合 Auto-Merge 控制上下文窗口预算；<br>
+与 GraphRAG/KAG 并用时，将“文档内层级” 与 “跨文档关系” 分治。([arXiv][10])<br>
+
+HiChunk 和 HiCBench 的出现，使文档切分不再是盲人摸象，而是可以进行量化评估和优化的过程。通过选择合适的分块策略，并结合自适应合并等方法，可以有效地提高 RAG 的检索效果。<br>
+
+<h2>05 评估与回归：从主观判断到客观指标</h2>
+评估是 RAG 系统持续优化的关键环节。RAGAS 和任务型基准等工具的出现，使 RAG 的评估从主观判断走向客观指标，从而实现更科学的优化。<br>
+RAGAS：RAGAS 是社区最常用的 RAG 评测工具链，提供上下文精确度、答案相关性、忠实度、上下文召回 等指标，以及合成数据集与工作流集成。尽管 RAGAS 存在“稳定性/一致性”争议，但作为持续集成中的回归基线 仍然非常实用。([docs.ragas.io][11])<br>
+任务型基准：<br>  
+HLE/ARC-AGI 等“工具型推理”基准用于评估 Agentic 策略与工具预算；<br>
+HotpotQA/2Wiki 基准用于评估多跳检索与逻辑一致性 (KAG/GraphRAG 典型)；<br>
+HiCBench 基准用于评估切分与证据供给链。([arXiv][12])<br>
+
+通过 RAGAS 和任务型基准等工具，可以全面评估 RAG 系统的性能，并根据评估结果进行有针对性的优化。例如，如果 RAG 的上下文召回率较低，则可以考虑优化文档切分策略或调整检索算法。<br>
+
+<h2>06 垂直场景：从指标竞赛到知识工程与流程再造</h2>
+RAG 在医疗、政务和企业搜索等垂直领域的应用，不再是简单的指标竞赛，而是需要结合知识工程和流程再造，才能真正发挥其价值。<br>
+医疗：MedGraphRAG 将医学实体/权威词表/外部证据与院内语料进行三重图谱联结 + U-Retrieval，核心在于“每条回答都带有可核验溯源”，并在多个医学数据集上取得了 SOTA 表现。([ACL Anthology][13])<br>
+政务/专业服务：KAG 在电子政务/医疗问答中相对于 RAG 具有显著的专业性增益，尤其适用于“法规/流程/时序/数值” 强约束场景。([arXiv][12])<br>
+企业搜索/复杂运维：GraphRAG 擅长跨系统、跨主题的 “全局-局部” 信息组织与浏览式问答 (browse-style QA)，典型应用于制造、客服知识底座等场景。([Microsoft][5])<br>
+在垂直领域应用 RAG，需要深入理解行业知识和业务流程，并将这些知识融入到 RAG 系统的设计中。例如，在医疗领域，需要构建医学知识图谱，并结合医学术语和临床指南，才能提供准确、可靠的医学知识服务。<br>
+
+<h2>07 前沿方向：深度搜索代理与端到端训练</h2>
+深度搜索代理和端到端训练是 RAG 的两个前沿方向，有望进一步提高 RAG 的性能和泛化能力。<br>
+DeepDive（清华）：DeepDive 通过知识图谱自动合成复杂问题 + 多轮强化学习 训练“深度搜索”代理。DeepDive-32B 在 BrowseComp 基准上取得了开放源范畴的竞争性结果，直接针对“长程、跨站、工具多步”的真实检索链条。([arXiv][14])<br>
+DeepDive 等研究表明，通过深度搜索代理和端到端训练，可以使 RAG 更好地适应复杂、动态的检索环境，并提高其在长程、跨站检索任务中的性能。<br>
+
+<h2>08 工程基线与落地蓝图</h2>
+以下是 RAG 落地实施的工程基线与演进蓝图，可供参考：<br>
+A. 体系结构（最小可用版）<br>
+编排层：有状态工作流 + Agent 节点 (任务分解/裁决/自检) + 工具预算与回合控制；(腾讯云 ADP3.0 文档可作为蓝本) ([腾讯云][4])<br>
+知识层：向量索引 + Graph 索引 (GraphRAG/KAG 其一或并存) + 结构化单元库 (表格/图形解析结果)。([Microsoft][5])<br>
+检索层：HiChunk 分层切分 + Auto-Merge 自适应拼接；多模态解析 接入 (RAG-Anything)。([arXiv][10])<br>
+生成层：答案-证据对齐 (source-grounded) + 自检/辩论裁决。<br>
+评估层：流水线内置 RAGAS + HiCBench + 任务基准 回归。([docs.ragas.io][11])<br>
+B. 关键 OKR/指标<br>
+证据召回率（Context Recall）≥ X%；忠实度（Faithfulness）↑；工具调用预算 ≤ 设定上限；端到端 95p 时延；人工核验抽检通过率。([docs.ragas.io][11])<br>
+C. 渐进式演进<br>
+Phase-1：单体 RAG → 引入 HiChunk/Auto-Merge + RAGAS；<br>
+Phase-2：对复杂问题引入 GraphRAG 或 KAG；<br>
+Phase-3：接入 多智能体编排 与 任务型基准 (HLE-like/HotpotQA)，将“工具预算/回合数”纳入 SLO；<br>
+Phase-4：针对关键场景做端到端对齐/强化学习 (参考 DeepDive 思路)。([arXiv][14])<br>
+
+<h2>09 技术选型与效果预期对照表</h2>
+技术路径|	适配问题|		关键机制|		工程收益|	（可验证口径）<br>
+多智能体 Agentic RAG	|	多步复杂推理/工具链	|	任务分解、辩论裁决、LLM-as-Judge|		在 HLE/ARC-AGI 等工具型推理上优于单体；注意 Token 成本与裁决策略设计。([DataCamp][2]) <br>
+GraphRAG	|	跨文档/跨主题全局洞察|		图谱抽取+社区层级+全局/局部双检索|		长文/多源问答稳定性提升；索引前需做实体/关系抽取质控。([Microsoft][5]) <br>
+KAG	|	强规则/时序/数值逻辑|		KG↔原文互索引 + 逻辑式推理	|	HotpotQA/2Wiki 多跳 F1 显著提升；政务/医疗落地记录。([arXiv][12]) <br>
+HiChunk + HiCBench|		证据割裂/上下文预算	|	分层切分 + 自适应合并 + 切分基准|		在证据稠密场景显著优于常规切分；提供“切分质量”量化。([arXiv][10]) <br>
+RAG-Anything（多模态）|		图表/表格/公式检索|		统一解析 + 跨模态索引	|	“图中趋势/表格极值/公式语义”可被直接检索与回答。([GitHub][8]) <br>
+医疗-安全 RAG|		高风险/可追溯	|	MedGraphRAG（三重图 + U-Retrieval）	|	回答内置权威溯源，SOTA 级评测表现。([ACL Anthology][13]) <br>
+
+
+<h2>10 风险与限制范围</h2>
+数据/评测过拟合：以单一基准 (如某任务或某厂商数据) 作为唯一优化目标，容易牺牲可迁移性；务必保留 GraphRAG/KAG/切分/Agentic 的解耦可替换。([Microsoft][1])<br>
+多体成本与“伪辩论”：多轮辩论并不总等于更高质量；需要停止准则/多样性约束 (DMAD/Free-MAD) 与 裁决器鲁棒性 治理“回声室”。([OpenReview][15])<br>
+多模态解析稳定性：表格/版面解析在合并单元格、跨页表格上仍有系统性挑战，需引入结构单元级的抽检与回归。([Upstage AI][16])<br>
+
+<h2>参考与延伸阅读</h2>
+Microsoft GraphRAG（研究/博客/工具）([Microsoft][1])<br>
+KAG：Ant Group × ZJU（论文/开源）([arXiv][6])<br>
+Youtu-GraphRAG / Youtu-Agent（论文/开源/平台）([arXiv][7])<br>
+HiChunk + HiCBench（论文/解读）([arXiv][10])<br>
+RAG-Anything（HKU，多模态 RAG）([GitHub][8])<br>
+RAGAS（评测框架）([docs.ragas.io][11])<br>
+DeepDive-32B（深度搜索代理）([arXiv][14])<br>
+将 RAG 技术应用于实际场景，需要根据具体需求选择合适的技术路径，并进行持续的评估和优化。通过将 RAG 与知识工程、流程再造相结合，可以充分发挥其在各个领域的价值。([腾讯云][4])<br>
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <footer class="container">
+<a href=ai_tech_002.htm>上一篇</a> | <a href=ai_tech_001.htm>下一篇</a> | <a href=index.html>返回目录</a>
+</footer>
+ </body>
+</html>
