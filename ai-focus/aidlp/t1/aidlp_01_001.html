@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025年数据安全风险：员工把数据“喂给”第三方 AI？——基于**流式网关 × 分级响应 × 审计闭环**的 AI-DLP 实战方案</title>
+    <meta name="description" content="
+## 摘要
+
+* **事实：GenAI 使用已成“默认打开”**。企业侧遥测显示，**≈45–50%** 员工在用 GenAI；其中**≈77%** 通过**复制粘贴**对话，且**≈82%** 发生在**个人/未纳管账号**上，超出企业的安全视野。
+  链接：LayerX 报告页 [https:...">
+    <meta name="keywords" content="结论小结, 二次确认, 自动脱敏, 识别, 链接, 流式, 剪贴板, 图片嵌字, 处置, 文本">
+    <meta name="author" content="AI安全">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="2025年数据安全风险：员工把数据“喂给”第三方 AI？——基于**流式网关 × 分级响应 × 审计闭环**的 AI-DLP 实战方案">
+    <meta property="og:description" content="
+## 摘要
+
+* **事实：GenAI 使用已成“默认打开”**。企业侧遥测显示，**≈45–50%** 员工在用 GenAI；其中**≈77%** 通过**复制粘贴**对话，且**≈82%** 发生在**个人/未纳管账号**上，超出企业的安全视野。
+  链接：LayerX 报告页 [https:...">
+    <meta property="og:url" content="https://www.tothefore.cn/ai-focus/aidlp/t1/aidlp_01_001.html">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="2025年数据安全风险：员工把数据“喂给”第三方 AI？——基于**流式网关 × 分级响应 × 审计闭环**的 AI-DLP 实战方案">
+    <meta name="twitter:description" content="
+## 摘要
+
+* **事实：GenAI 使用已成“默认打开”**。企业侧遥测显示，**≈45–50%** 员工在用 GenAI；其中**≈77%** 通过**复制粘贴**对话，且**≈82%** 发生在**个人/未纳管账号**上，超出企业的安全视野。
+  链接：LayerX 报告页 [https:...">
+    
+    
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background-color: #f8f9fa; display: flex; min-height: 100vh; }
+            .container { display: flex; width: 100%; max-width: 1400px; margin: 0 auto; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+            .main-content { flex: 1; padding: 40px; max-width: 75%; }
+            .sidebar { width: 25%; min-width: 300px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0; }
+            .sidebar iframe { width: 100%; height: 100%; border: none; background: white; }
+            .header { border-bottom: 3px solid #667eea; padding-bottom: 20px; margin-bottom: 30px; }
+            h1 { color: #2c3e50; font-size: 2.5em; margin-bottom: 15px; line-height: 1.2; }
+            .meta-info { color: #7f8c8d; font-size: 0.9em; margin-bottom: 20px; }
+            .toc { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #667eea; }
+            .toc h2 { color: #2c3e50; margin-bottom: 15px; font-size: 1.3em; }
+            .toc ul { list-style: none; padding-left: 0; }
+            .toc li { margin: 8px 0; }
+            .toc a { color: #3498db; text-decoration: none; transition: color 0.3s; }
+            .toc a:hover { color: #2980b9; }
+            h2 { color: #2c3e50; margin: 30px 0 15px 0; padding-bottom: 8px; border-bottom: 2px solid #ecf0f1; }
+            h3 { color: #34495e; margin: 25px 0 12px 0; }
+            p { margin-bottom: 16px; text-align: justify; }
+            table { width: 100%; border-collapse: collapse; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+            th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
+            th { background-color: #667eea; color: white; font-weight: 600; }
+            tr:nth-child(even) { background-color: #f8f9fa; }
+            tr:hover { background-color: #f1f3f4; }
+            code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; }
+            pre { background: #2d3748; color: #e2e8f0; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; }
+            blockquote { border-left: 4px solid #667eea; padding-left: 20px; margin: 20px 0; color: #7f8c8d; font-style: italic; }
+            .keywords { background: #e8f4fd; padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 0.9em; }
+            @media (max-width: 768px) {
+                .container { flex-direction: column; }
+                .main-content, .sidebar { max-width: 100%; width: 100%; }
+                .sidebar { min-height: 400px; }
+            }
+        </style>
+
+<script>
+(function(){
+var el = document.createElement("script");
+el.src = "https://lf1-cdn-tos.bytegoofy.com/goofy/ttzz/push.js?58a3a397c1380bb96378f100dff48d753347a9564311e126552993053878eda6bc434964556b7d7129e9b750ed197d397efd7b0c6c715c1701396e1af40cec962b8d7c8c6655c9b00211740aa8a98e2e";
+el.id = "ttzz";
+var s = document.getElementsByTagName("script")[0];
+s.parentNode.insertBefore(el, s);
+})(window)
+</script>
+
+        
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <div class="header">
+                <h1 id="main-title">2025年数据安全风险：员工把数据“喂给”第三方 AI？——基于**流式网关 × 分级响应 × 审计闭环**的 AI-DLP 实战方案</h1>
+                <div class="meta-info">
+                    发布时间: 2025年10月10日 | 
+                    预计阅读时间: 2分钟
+                </div>
+                <div class="keywords">
+                    <strong>关键词:</strong> 结论小结, 二次确认, 自动脱敏, 识别, 链接, 流式, 剪贴板, 图片嵌字, 处置, 文本
+                </div>
+            </div>
+            
+            <div class="toc">
+<h2>📑 文章目录</h2>
+<ul>
+  <li><a href="#摘要">摘要</a></li>
+  <li><a href="#一-风险全景-从-影子使用-到-隐蔽泄漏">一 风险全景 从 影子使用 到 隐蔽泄漏</a></li>
+  <li><a href="#二-传统-dlp-为何不够用">二 传统 Dlp 为何不够用</a></li>
+  <li><a href="#三-与微软-blueprint-对齐的企业落地框架-四阶段">三 与微软 Blueprint 对齐的企业落地框架 四阶段</a></li>
+  <li><a href="#1-discover-发现与可视化">1 Discover 发现与可视化</a></li>
+  <li><a href="#2-block-unsanctioned-阻断未授权">2 Block Unsanctioned 阻断未授权</a></li>
+  <li><a href="#3-protect-sanctioned-授权出站防护-流式-ai-dlp-核心">3 Protect Sanctioned 授权出站防护 流式 Ai Dlp 核心</a></li>
+  <li><a href="#4-govern-in-edge-浏览器-终端治理">4 Govern In Edge 浏览器 终端治理</a></li>
+  <li><a href="#四-技术剖面-为何-组合式识别-更适配-ai-场景">四 技术剖面 为何 组合式识别 更适配 Ai 场景</a></li>
+  <li><a href="#五-实测-kpi-与治理目标-建议区间-方法">五 实测 Kpi 与治理目标 建议区间 方法</a></li>
+  <li><a href="#六-政策与控点映射表-示例-便于合规审计">六 政策与控点映射表 示例 便于合规审计</a></li>
+  <li><a href="#七-场景化推演-最小动作清单">七 场景化推演 最小动作清单</a></li>
+  <li><a href="#八-对比表-传统-dlp-vs-流式-ai-dlp-vs-仅浏览器策略">八 对比表 传统 Dlp Vs 流式 Ai Dlp Vs 仅浏览器策略</a></li>
+  <li><a href="#九-盲区与-最小可控面">九 盲区与 最小可控面</a></li>
+  <li><a href="#十-总结-让-治理默认开启-让-安全不打扰">十 总结 让 治理默认开启 让 安全不打扰</a></li>
+  <li><a href="#媒体观察">媒体观察</a></li>
+  <li><a href="#术语与同义扩展">术语与同义扩展</a></li>
+  <li><a href="#主要参考">主要参考</a></li>
+</ul>
+</div>
+            
+            <article>
+                <h2 id="摘要">摘要</h2>
+<p>* <strong>事实：GenAI 使用已成“默认事实”</strong>。企业侧遥测显示，<strong>≈45–50%</strong> 员工在用 GenAI；其中<strong>≈77%</strong> 通过<strong>复制粘贴</strong>对话，且<strong>≈82%</strong> 发生在<strong>个人/未纳管账号</strong>上，超出企业的安全视野。
+  链接：LayerX 报告页 <a href="https://go.layerxsecurity.com/the-layerx-enterprise-ai-saas-data-security-report-2025">https://go.layerxsecurity.com/the-layerx-enterprise-ai-saas-data-security-report-2025</a> ｜ 官方博文 <a href="https://blog.layerxsecurity.com/">https://blog.layerxsecurity.com/</a><br>
+* <strong>权威建议：</strong> 微软给出“<strong>发现 → 阻断未授权 → 保护授权出站 → Edge/终端治理</strong>”四阶段实践，我们用<strong>流式 AI-DLP</strong>逐项落地。
+  链接：Microsoft Learn（防止泄漏至 Shadow AI）<a href="https://learn.microsoft.com/en-us/purview/deploymentmodels/depmod-data-leak-shadow-ai-intro">https://learn.microsoft.com/en-us/purview/deploymentmodels/depmod-data-leak-shadow-ai-intro</a><br>
+* <strong>趋势：</strong> Netskope 2025 最新追踪 <strong>1,550+ GenAI SaaS 应用</strong>（2025-08），Shadow/Agentic 使用范围进一步扩张。
+  链接：Netskope Cloud & Threat Report 2025 <a href="https://www.netskope.com/resources/reports-guides/cloud-and-threat-report-generative-ai-2025">https://www.netskope.com/resources/reports-guides/cloud-and-threat-report-generative-ai-2025</a><br>
+* <strong>案例提醒：</strong> 三星（2023）因员工将源码/设备信息贴入 ChatGPT 引发数据泄露，说明“<strong>拷贝粘贴</strong>”才是首要的数据泄漏通道。
+  链接：Cybernews 事件解读 <a href="https://cybernews.com/security/chatgpt-samsung-leak-explained-lessons/">https://cybernews.com/security/chatgpt-samsung-leak-explained-lessons/</a></p>
+<p>更新时间：2025年10月10日</p>
+<p>---</p>
+<h2 id="一-风险全景-从-影子使用-到-隐蔽泄漏">一、风险全景：从“影子使用”到“隐蔽泄漏”</h2>
+<p>* <strong>主通道</strong>：片段化文本（代码片段、合同字段、指标表）直接粘贴到 AI；<strong>文档/截图/压缩包</strong>上传求总结；<strong>剪贴板</strong>成为真正高频外泄口。<br>
+* <strong>账号视角</strong>：<strong>未纳管个人账号</strong>与<strong>非 SSO 会话</strong>是最大盲区。<br>
+* <strong>生态扩张</strong>：截至 2025-08，企业用户触达的 GenAI 应用已达 <strong>1,550+</strong>，自建 Agent/插件化工作流加剧边界模糊。<br>
+* <strong>结论小结：</strong> 外泄从“偶发现象”转为“规模化常态”，<strong>可观测性与实时处置</strong>是治理分水岭。</p>
+<p>---</p>
+<h2 id="二-传统-dlp-为何不够用">二、传统 DLP 为何不够用</h2>
+<p>* <strong>流式数据</strong>：传统DLP主要针对非流式的文档，而AI对话主要是在<strong>HTTPS 流式协议上的字节串进行重组</strong>，传统DLP难以识别。<br>
+* <strong>语义与上下文</strong>：规则/正则对<strong>跨句/跨轮</strong>与<strong>富文本微片段</strong>识别弱。<br>
+* <strong>路径滞后</strong>：先放行后审计的“事后取证”在<strong>上云/出境</strong>后一旦发生即难逆。<br>
+* <strong>体验对立</strong>：一刀切阻断影响连续性，全放行又形成系统性风险。<br>
+* <strong>结论小结：</strong> 需要把“<strong>识别→决策→处置</strong>”嵌入<strong>输入/上传动作</strong>本身，完成<strong>实时闭环</strong>。</p>
+<p>---</p>
+<h2 id="三-与微软-blueprint-对齐的企业落地框架-四阶段">三、与微软 Blueprint 对齐的企业落地框架（四阶段）</h2>
+<blockquote>对应微软“<strong>Discover → Block Unsanctioned → Protect Sanctioned → Govern in Edge</strong>”。</blockquote>
+<h3 id="1-discover-发现与可视化">1) Discover｜发现与可视化</h3>
+<p>* <strong>入口统一纳管</strong>：Web 代理/路由/旁路镜像识别 <strong>AI 域名/应用指纹/API 模式</strong>；建立<strong>授权/未授权</strong>清单。<br>
+* <strong>账号标注</strong>：识别<strong>个人账号/非 SSO</strong>；“谁/在哪/用什么/频率/触发类型”入台账。<br>
+* <strong>指标看板</strong>：部门维度沉淀<strong>AI 访问、复制粘贴次数、触发分布</strong>。</p>
+<h3 id="2-block-unsanctioned-阻断未授权">2) Block Unsanctioned｜阻断未授权</h3>
+<p>* <strong>强制引流</strong>：对未授权 AI <strong>重定向/阻断</strong>；提供<strong>受控替代/纳管申请</strong>。<br>
+* <strong>会话硬隔离</strong>：对个人浏览器/未纳管会话应用<strong>下载/剪贴板/表单提交</strong>限制。</p>
+<h3 id="3-protect-sanctioned-授权出站防护-流式-ai-dlp-核心">3) Protect Sanctioned｜授权出站防护（流式 AI-DLP 核心）</h3>
+<p>* <strong>文本流式检查</strong>：关键词+正则+数据标识符（PII/PCI/秘钥/源码特征）+<strong>语义理解</strong>+<strong>文档指纹</strong>，支持<strong>多轮会话累积</strong>评估。<br>
+* <strong>文件/图片检查</strong>：<strong>类型还原</strong>（伪装扩展名、加密 Office、压缩套娃、图片嵌字/OCR），页眉页脚/文本框等<strong>边角内容</strong>同等严谨。<br>
+* <strong>分级响应</strong>：</p>
+<p>* <strong>低风险放行</strong>（默认不打扰）<br>
+  * <strong>二次确认放行</strong>（责任提醒+留痕）<br>
+  * <strong>自动脱敏</strong>（定点遮蔽/替换号码段、标识符、密钥）<br>
+  * <strong>高敏硬拦截</strong>（命中文档指纹/密级）<br>
+* <strong>可解释性</strong>：输出<strong>命中项/阈值/模型版本</strong>；生成 <strong>JSON/PDF 审计快照</strong>。</p>
+<h3 id="4-govern-in-edge-浏览器-终端治理">4) Govern in Edge｜浏览器/终端治理</h3>
+<p>* <strong>受管浏览器策略</strong>：<strong>剪贴板 DLP、出站内容策略、下载限制、会话隔离</strong>；与 <strong>Purview DSPM</strong> 联动数据发现与策略下沉。<br>
+* 参考资料（Purview DSPM 客户指引 PDF）：<br>
+  <a href="https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/bade/documents/products-and-services/en-us/security/DSPM-and-DSPM-for-AI-Customer-Guide-Final-V2.pdf">https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/bade/documents/products-and-services/en-us/security/DSPM-and-DSPM-for-AI-Customer-Guide-Final-V2.pdf</a></p>
+<strong>结论小结：</strong> “四阶段”=<strong>入口可视化</strong>+<strong>未授权硬门禁</strong>+<strong>授权出站细粒度防护</strong>+<strong>浏览器侧兜底</strong>。
+<p>---</p>
+<h2 id="四-技术剖面-为何-组合式识别-更适配-ai-场景">四、技术剖面：为何“组合式识别”更适配 AI 场景</h2>
+<ol><ul><li><strong>语义理解 × 文档指纹</strong>：既能看懂<strong>隐性泄露</strong>，又能对<strong>核心文档/片段</strong>设“准入门槛”。</li>
+<li><strong>多格式取证与类型还原</strong>：覆盖<strong>加密 Office/压缩套娃/图片嵌字</strong>，不被扩展名迷惑。</li>
+<li><strong>一次提交内闭环</strong>：把<strong>识别→处置</strong>压缩到<strong>单次输入/上传</strong>，通过<strong>二次确认/自动脱敏</strong>降低摩擦。</li>
+<li><strong>多轮会话累积</strong>：识别“<strong>少量-多次-渐进式</strong>”外泄，解决静态规则做不到的<strong>拼图还原</strong>。</li>
+</ul>
+</ol>
+   <strong>结论小结：</strong> <strong>实时性×可解释性</strong>是落地关键。
+<p>---</p>
+<h2 id="五-实测-kpi-与治理目标-建议区间-方法">五、实测 KPI 与治理目标（建议区间＋方法）</h2>
+<p>* <strong>用户态延迟（P95）</strong>：文本 ≤ <strong>0.5s</strong>；典型办公文档 ≤ <strong>1.0s</strong>。<br>
+* <strong>文件类型识别覆盖</strong>：≥ <strong>100+</strong> 常见类型（含加密/伪装）。<br>
+* <strong>处置分布（季度目标）</strong>：放行 ≥ <strong>70%</strong>｜二次确认 <strong>15–20%</strong>｜自动脱敏 <strong>5–10%</strong>｜硬拦截 ≤ <strong>3%</strong>。<br>
+* <strong>方法说明（摘要）</strong>：</p>
+<p>* <strong>样本量</strong>：≥ 5,000 次提交（文本:文件 ≈ 7:3）；<br>
+  * <strong>文件谱系</strong>：Office/PDF/图像/压缩包（1–25 MB 分层）；<br>
+  * <strong>负载场景</strong>：并发 QPS 50/200/500 三档压测；<br>
+  * <strong>评估口径</strong>：端到端计时（浏览器→策略→回执），剔除网络抖动极值（>P99.9）。<br>
+    <strong>结论小结：</strong> 用<strong>指标+方法</strong>让 KPI 可复验。</p>
+<p>---</p>
+<h2 id="六-政策与控点映射表-示例-便于合规审计">六、政策与控点映射表（示例，便于合规审计）</h2>
+<p><table>
+  <tr>
+    <th>治理环节</th>
+    <th>组织/制度控制</th>
+    <th>技术控点（本文方案）</th>
+    <th>备注</th>
+  </tr>
+  <tr>
+    <td>可视化与授权清单</td>
+    <td>制定“授权/未授权 AI 清单”、纳管与申请流程</td>
+    <td>入口识别与目录、强制引流/阻断</td>
+    <td>与供应商/法务联动</td>
+  </tr>
+  <tr>
+    <td>最小必要原则</td>
+    <td>岗位/场景分级策略</td>
+    <td>分级响应（放行/二次确认/脱敏/拦截）</td>
+    <td>默认最小暴露</td>
+  </tr>
+  <tr>
+    <td>出境与第三方共享</td>
+    <td>跨境/第三方共享评估与合同条款</td>
+    <td>域名/地区策略、目的地限制、审计快照</td>
+    <td>结合《数据出境安全评估办法》</td>
+  </tr>
+  <tr>
+    <td>个人信息保护</td>
+    <td>员工规范与培训、告知与同意</td>
+    <td>PII/敏感识别、自动脱敏、留痕</td>
+    <td>结合《个人信息保护法》要求</td>
+  </tr>
+  <tr>
+    <td>安全审计与留存</td>
+    <td>日志留存、取证流程</td>
+    <td>JSON/PDF 审计、<strong>≥180 天</strong>留存建议</td>
+    <td>对齐内控与稽核</td>
+  </tr>
+</table> 
+<strong>结论小结：</strong> 把<strong>制度条款</strong>落到<strong>技术开关</strong>，让审计“有图有据”。 </p>
+<p>---</p>
+<h2 id="七-场景化推演-最小动作清单">七、场景化推演（最小动作清单）</h2>
+<ol><ul><li><strong>粘贴客户名单片段到授权 AI</strong> → 命中模式 → <strong>二次确认</strong>｜可选<strong>自动脱敏</strong>｜留痕。</li>
+<li><strong>上传带页脚敏感条款的合同草案</strong> → 页脚指纹命中 → <strong>高敏拦截</strong>｜提示改走<strong>受控模型/脱敏版本</strong>｜生成 <strong>PDF+JSON</strong>。</li>
+<li><strong>多轮对话渐进式泄露</strong> → 跨轮累积超阈 → 先<strong>二次确认</strong>，继续上探则<strong>拦截</strong>并标注命中指纹。</li>
+</ul>
+</ol>
+   <strong>结论小结：</strong> “<strong>一次提交闭环</strong>＋<strong>跨轮累积</strong>”覆盖主流外泄路径。
+<p>---</p>
+<h2 id="八-对比表-传统-dlp-vs-流式-ai-dlp-vs-仅浏览器策略">八、<strong>对比表：传统 DLP vs 流式 AI-DLP vs 仅浏览器策略</strong></h2>
+<p><table>
+  <tr>
+    <th>维度</th>
+    <th>传统 DLP</th>
+    <th><strong>流式 AI-DLP（本文）</strong></th>
+    <th>仅浏览器策略</th>
+  </tr>
+  <tr>
+    <td>语义/上下文</td>
+    <td>弱</td>
+    <td><strong>强（语义+指纹）</strong></td>
+    <td>中（依赖规则）</td>
+  </tr>
+  <tr>
+    <td>多轮会话</td>
+    <td>无</td>
+    <td><strong>有（跨轮累积）</strong></td>
+    <td>弱</td>
+  </tr>
+  <tr>
+    <td>富文本/图片嵌字</td>
+    <td>有限</td>
+    <td><strong>强（OCR+类型还原）</strong></td>
+    <td>有限</td>
+  </tr>
+  <tr>
+    <td>实时处置</td>
+    <td>事后为主</td>
+    <td><strong>提交内闭环</strong></td>
+    <td>提交侧可控</td>
+  </tr>
+  <tr>
+    <td>用户体验</td>
+    <td>误报摩擦大</td>
+    <td><strong>二次确认/脱敏降摩擦</strong></td>
+    <td>依策略强硬</td>
+  </tr>
+  <tr>
+    <td>适用范围</td>
+    <td>存储/邮件/网关</td>
+    <td><strong>聊天/上传/API 调用</strong></td>
+    <td>受管浏览器内</td>
+  </tr>
+</table>
+<strong>结论小结：</strong> <strong>AI-DLP</strong>在<strong>实时性/语义/多轮</strong>与<strong>图片嵌字</strong>上明显占优。</p>
+<p>---</p>
+<h2 id="九-盲区与-最小可控面">九、盲区与“最小可控面”</h2>
+<p>* <strong>个人设备/未纳管浏览器/端到端加密 App</strong>：可观测性弱。<br>
+* <strong>最小可控面建议</strong>：把<strong>强控制</strong>施加在<strong>受管浏览器/受管终端/企业出口代理</strong>，其余面采用<strong>告知+监测+抽查</strong>与<strong>申请纳管</strong>渐进收敛。<br>
+  <strong>结论小结：</strong> 坦诚盲区 + 给出“可控面”，提升可信度。</p>
+<p>---</p>
+<h2 id="十-总结-让-治理默认开启-让-安全不打扰">十、总结：让“治理默认开启”，让“安全不打扰”</h2>
+<p>* <strong>回顾</strong>：GenAI 使用常态化；<strong>复制粘贴</strong>是头号通道；<strong>未纳管账号</strong>是最大盲区（LayerX 一手锚点）。<br>
+* <strong>受限范围</strong>：GenAI 是生产力，不建议一刀切封禁 GenAI，而是要优先实现‘授权出站可控 + 拦截未授权数据<br>
+* <strong>方案</strong>：<strong>流式网关+语义识别+分级响应+审计闭环</strong>前移控制点；与微软四阶段<strong>一一对齐</strong>。<br>
+* <strong>落地</strong>：入口前移统一纳管；策略分层对齐岗位；<strong>审计可解释</strong>；<strong>季度复盘</strong>持续迭代。<br>
+* <strong>目标</strong>：<strong>少扰民，拦大错</strong>，在不牺牲效率的前提下实现“默认安全”。</p>
+
+一句话结论：通过引入支持流式的AI DLP网关设备，对企业员工向外部AI传输的数据进行敏感数据检查和拦截，是保护员工泄露数据到AI的可行技术方案。
+
+<p>---</p>
+<h2 id="媒体观察">媒体观察</h2>
+<p>* TechRadar：员工正在把公司机密粘贴进 ChatGPT 的新风险<br>
+  <a href="https://www.techradar.com/pro/security/watch-out-your-workers-might-be-pasting-company-secrets-into-chatgpt">https://www.techradar.com/pro/security/watch-out-your-workers-might-be-pasting-company-secrets-into-chatgpt</a><br>
+* Tom’s Guide：报告警示“无意泄密”<br>
+  <a href="https://www.tomsguide.com/ai/employees-are-unknowingly-leaking-company-secrets-through-chatgpt-new-report-warns">https://www.tomsguide.com/ai/employees-are-unknowingly-leaking-company-secrets-through-chatgpt-new-report-warns</a></p>
+<p>---</p>
+<h2 id="术语与同义扩展">术语与同义扩展</h2>
+<p>Shadow AI / 影子AI；sanctioned vs unsanctioned AI；GenAI DLP / AI 数据防泄露；LLM 网关 / AI 安全代理；剪贴板 DLP / clipboard DLP；出站内容检测 / outbound content inspection；文档指纹 / document fingerprint；浏览器隔离 / browser isolation；受管与未纳管会话 / managed vs unmanaged sessions；CASB / Microsoft Defender for Cloud Apps（MCAS）；Purview DLP / Copilot governance；Shadow AI Guardrails / GenAI DLP Gateway / Copy-Paste DLP / Personal Unmanaged Accounts / Sanctioned AI Controls / Agentic AI Controls</p>
+<p>---</p>
+<h2 id="主要参考">主要参考</h2>
+<p>* LayerX 2025 报告页（含下载）：<a href="https://go.layerxsecurity.com/the-layerx-enterprise-ai-saas-data-security-report-2025">https://go.layerxsecurity.com/the-layerx-enterprise-ai-saas-data-security-report-2025</a><br>
+* LayerX 官方博客汇总：<a href="https://blog.layerxsecurity.com/">https://blog.layerxsecurity.com/</a><br>
+* Microsoft Learn（防止数据泄漏至 Shadow AI）：<a href="https://learn.microsoft.com/en-us/purview/deploymentmodels/depmod-data-leak-shadow-ai-intro">https://learn.microsoft.com/en-us/purview/deploymentmodels/depmod-data-leak-shadow-ai-intro</a><br>
+* Netskope《Cloud and Threat Report: Generative AI 2025》：<a href="https://www.netskope.com/resources/reports-guides/cloud-and-threat-report-generative-ai-2025">https://www.netskope.com/resources/reports-guides/cloud-and-threat-report-generative-ai-2025</a><br>
+* Microsoft Purview DSPM for AI（客户指引 PDF）：<a href="https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/bade/documents/products-and-services/en-us/security/DSPM-and-DSPM-for-AI-Customer-Guide-Final-V2.pdf">https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/bade/documents/products-and-services/en-us/security/DSPM-and-DSPM-for-AI-Customer-Guide-Final-V2.pdf</a><br>
+* Cybernews（三星事件解读）：<a href="https://cybernews.com/security/chatgpt-samsung-leak-explained-lessons/">https://cybernews.com/security/chatgpt-samsung-leak-explained-lessons/</a><br>
+* Cyera 2025（AI 数据安全观察）：<a href="https://www.cyera.com/research-labs/2025-state-of-ai-data-security-report">https://www.cyera.com/research-labs/2025-state-of-ai-data-security-report</a></p>
+本文由AI-FOCUS团队整理，引用请透出AI-FOCUS团队,如你担心员工向AI泄露数据，可在原文首发地址进行AI DLP 试用。
+            </article>
+            <div>
+              <a href=aidlp_01_001.html>上一篇</a> | <a href=aidlp_01_001.html>下一篇</a> | <a href=index.html>返回目录</a>
+            </div>
+        </div>
+        
+        <div class="sidebar">
+            <iframe src="../trial.html" title="产品试用"></iframe>
+        </div>
+    </div>
+
+
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"2025年数据安全风险：员工把数据“喂给”第三方 AI？——基于**流式网关 × 分级响应 × 审计闭环**的 AI-DLP 实战方案","description":"\n## 摘要\n\n* **事实：GenAI 使用已成“默认打开”**。企业侧遥测显示，**≈45–50%** 员工在用 GenAI；其中**≈77%** 通过**复制粘贴**对话，且**≈82%** 发生在**个人/未纳管账号**上，超出企业的安全视野。\n  链接：LayerX 报告页 [https:...","datePublished":"2025-10-10T18:45:26.401677","dateModified":"2025-10-10T18:45:26.401686","wordCount":582,"timeRequired":"PT2M","author":{"@type":"Organization","name":"AI安全"},"publisher":{"@type":"Organization","name":"AI安全"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.tothefore.cn/ai-focus/aidlp/t1/aidlp_01_001.html"}}</script>
+</body>
+</html>
