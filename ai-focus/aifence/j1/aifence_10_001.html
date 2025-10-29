@@ -14,7 +14,7 @@
     <meta property="og:title" content="如何防范AI带来的安全风险？AI-FOCUS团队的“滤海+鉴冰”两件套全方位解决方案">
     <meta property="og:description" content="## 一、AI普及下的安全风险困局：两类核心场景亟待破解
 随着生成式AI技术融入企业运营，从员工用ChatGPT撰写报告、调用AI API处理数据，到企业对外部署AI客户服务、问答知识库，AI已成为提升效率的核心工具。但伴随便利而来的，是日益凸显的AI安全风险——这些风险并非单一维度，而是呈现“双向...">
-    <meta property="og:url" content="https://www.tothefore.cn/ai-focus/aifence/j1/aifence_06_002.html">
+    <meta property="og:url" content="https://www.tothefore.cn/ai-focus/aifence/j1/aifence_10_001.html">
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
@@ -267,12 +267,29 @@ AI技术的价值在于提升效率、创造新可能，而安全是享受这些
             </div>
         </div>
         
-        <div class="sidebar">
-            <iframe src="../trial.html" title="产品试用"></iframe>
-        </div>
+<div id="iframe-mount"></div>
+<script>
+  // 取父页自己的 URL 参数
+  const u = new URL(location.href);
+  const channel = u.searchParams.get("channel") || "";
+  const article = u.searchParams.get("article") || "";
+
+  // 拼到 iframe 的 src 上（同/跨域都适用）
+  const src = `https://www.tothefore.cn/ai-focus/trial/?channel=${encodeURIComponent(channel)}&article=${encodeURIComponent(article)}`;
+
+  // 动态创建 iframe
+  const ifr = document.createElement("iframe");
+  ifr.src = src;
+  ifr.width = "100%";
+  ifr.height = "100%";
+  ifr.frameBorder = "0";
+  ifr.referrerPolicy = "no-referrer-when-downgrade";
+  document.getElementById("iframe-mount").appendChild(ifr);
+</script>
+
     </div>
 
 
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"如何防范AI带来的安全风险？AI-FOCUS团队的“滤海+鉴冰”两件套全方位解决方案","description":"## 一、AI普及下的安全风险困局：两类核心场景亟待破解\n随着生成式AI技术融入企业运营，从员工用ChatGPT撰写报告、调用AI API处理数据，到企业对外部署AI客户服务、问答知识库，AI已成为提升效率的核心工具。但伴随便利而来的，是日益凸显的AI安全风险——这些风险并非单一维度，而是呈现“双向...","datePublished":"2025-10-12T13:39:37.361437","dateModified":"2025-10-12T13:39:37.361464","wordCount":257,"timeRequired":"PT1M","author":{"@type":"Organization","name":"AI安全"},"publisher":{"@type":"Organization","name":"AI安全"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.tothefore.cn/ai-focus/aifence/j1/aifence_06_002.html"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"如何防范AI带来的安全风险？AI-FOCUS团队的“滤海+鉴冰”两件套全方位解决方案","description":"## 一、AI普及下的安全风险困局：两类核心场景亟待破解\n随着生成式AI技术融入企业运营，从员工用ChatGPT撰写报告、调用AI API处理数据，到企业对外部署AI客户服务、问答知识库，AI已成为提升效率的核心工具。但伴随便利而来的，是日益凸显的AI安全风险——这些风险并非单一维度，而是呈现“双向...","datePublished":"2025-10-12T13:39:37.361437","dateModified":"2025-10-12T13:39:37.361464","wordCount":257,"timeRequired":"PT1M","author":{"@type":"Organization","name":"AI安全"},"publisher":{"@type":"Organization","name":"AI安全"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.tothefore.cn/ai-focus/aifence/j1/aifence_10_001.html"}}</script>
 </body>
 </html>
