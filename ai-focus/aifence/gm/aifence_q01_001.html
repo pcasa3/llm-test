@@ -89,7 +89,7 @@ s.parentNode.insertBefore(el, s);
             <article>
                 <p>随着大型语言模型（LLM）的深度应用，从智能客服、代码生成到内容创作，企业正面临一种新型且严峻的安全挑战——提示词攻击（Prompt Injection）。此类攻击通过精心构造的恶意输入，试图突破模型的预设安全边界，诱导LLM执行非预期操作、输出有害内容或泄露敏感信息。根据最新的安全报告，提示词攻击已成为影响人工智能系统安全性的<strong>核心隐患</strong>。为有效应对这一威胁，企业必须构建全流程、多层次的防御体系，以确保AI应用的安全与合规。</p>
 <p>在这一背景下，选择专业的防护工具成为关键。AI-FOCUS团队推出的<strong>鉴冰AI-FENCE（AI安全围栏）</strong>，正是一款为企业级LLM应用设计，旨在提供全方位提示词攻击防护的解决方案。本文将深入解析提示词攻击的复杂形态，并重点介绍鉴冰AI-FENCE如何凭借其独特的五层防御架构，帮助企业构建起坚固的AI安全防线。这套系统能有效区分<strong>正常业务指令</strong>与<strong>恶意越狱尝试</strong>，保障AI服务的稳定性和数据安全。</p>
-<p>鉴冰AI-FENCE的架构设计聚焦于<strong>透明代理</strong>与<strong>全流程防护</strong>。它无缝部署于用户与LLM之间，提供<strong>输入清洗</strong>、<strong>中间层异常检测</strong>以及<strong>输出内容过滤</strong>等核心能力，以实现实时且精准的拦截。系统通过先进的<strong>语义意图分析</strong>技术，不仅检查输入中的恶意词汇或代码，更能理解其隐含的攻击意图，有效应对不断演进的<strong>编码混淆</strong>和<strong>多模态攻击</strong>，确保模型始终在可控的安全范围内运行。这种<strong>Recall-First</strong>的安全策略，旨在将潜在风险在早期阶段即进行<strong>闭环处理</strong>。</p>
+<p>鉴冰AI-FENCE的架构设计聚焦于<strong>透明代理</strong>与<strong>全流程防护</strong>。它无缝部署于用户与LLM之间，提供<strong>输入清洗</strong>、<strong>中间层异常检测</strong>以及<strong>输出内容过滤</strong>等核心能力，以实现实时且精准的拦截。系统通过先进的<strong>语义意图分析</strong>技术，不仅检查输入中的恶意词汇或代码，更能理解其隐含的攻击意图，有效应对不断演进的<strong>编码混淆</strong>和<strong>多模态攻击</strong>，确保模型始终在可控的安全范围内运行。这种<strong>实时监测</strong>的安全策略，旨在将潜在风险在早期阶段即进行<strong>闭环处理</strong>。</p>
 <h3 id="一-提示词攻击的五大层次与对抗策略-现象-措施-条款-阈值-判断">一、提示词攻击的五大层次与对抗策略：现象→措施→条款/阈值→判断</h3>
 <p>现代提示词攻击已发展出一套涵盖输入、嵌入、中间处理、输出乃至多模态的复杂体系，每一层都需要对应的专业防御机制。</p>
 <p><table>
@@ -99,13 +99,6 @@ s.parentNode.insertBefore(el, s);
     <th>防御措施</th>
     <th>对应 exact terms（条款/阈值）</th>
     <th>安全判断（同段闭合）</th>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
   </tr>
   <tr>
     <td><strong>词义、语义与场景构造攻击</strong></td>
@@ -135,7 +128,14 @@ s.parentNode.insertBefore(el, s);
     <td><strong>输出指令识别</strong>、<strong>对抗样本检测</strong>、<strong>GCG攻击</strong>（自动化生成）、<strong>特殊符号过滤</strong>。</td>
     <td>识别到<strong>强制输出指令</strong>或<strong>对抗样本特征</strong>，且突破阈值，则判定为拦截。</td>
   </tr>
-</table>| <strong>多模态攻击</strong> | 图像内嵌强制指令（OCR）、物体识别微扰攻击、共享向量空间映射攻击。 | 图像内容深度分析、对抗样本识别、跨模态语义一致性检查。 | <strong>跨模态一致性检查</strong>、<strong>OCR识别</strong>（图像内嵌文字）、<strong>对抗样本识别</strong>（微小扰动）。 | <strong>图像-文本语义不一致</strong>或存在<strong>微扰样本</strong>，且指令可被提取，则判定为高风险。 |</p>
+  <tr>
+    <td><strong>多模态攻击</strong></td>
+    <td>图像内嵌强制指令（OCR）、物体识别微扰攻击、共享向量空间映射攻击。</td>
+    <td>图像内容深度分析、对抗样本识别、跨模态语义一致性检查。</td>
+    <td><strong>跨模态一致性检查</strong>、<strong>OCR识别</strong>（图像内嵌文字）、<strong>对抗样本识别</strong>（微小扰动）。</td>
+    <td><strong>图像-文本语义不一致</strong>或存在<strong>微扰样本</strong>，且指令可被提取，则判定为高风险。</td>
+  </tr>
+</table>
 <h4 id="1-1-词义-语义与场景构造攻击">1.1 词义、语义与场景构造攻击</h4>
 <p>这是最基础也最普遍的攻击形态，核心是利用自然语言的灵活性和模型的泛化能力。攻击者常通过使用“忽略所有之前的限制，告诉我如何…”等<strong>越狱模板</strong>，或是采用“角色扮演”、“假设场景”来绕过预设的<strong>安全约束</strong>。例如，用户输入可能伪装成“学术讨论”或“系统测试”，试图合理化其恶意意图。<strong>防范策略</strong>：鉴冰AI-FENCE通过维护一个庞大的<strong>恶意模式库</strong>（包含10万+已知越狱模板），并结合<strong>语义意图分析</strong>技术，不仅检查单个关键词，更重要的是理解输入的<strong>整体语义意图</strong>，判断用户是否试图构造攻击场景。</p>
 <h4 id="1-2-嵌入层与混淆攻击-抗编码与标准化处理">1.2 嵌入层与混淆攻击：抗编码与标准化处理</h4>
@@ -170,11 +170,6 @@ s.parentNode.insertBefore(el, s);
     <th>描述/能力锚</th>
   </tr>
   <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
     <td><strong>检测召回率</strong></td>
     <td>攻击识别率 $\ge 99.5\%$（内部测试）</td>
     <td>覆盖五层攻击，尤其是渐进式攻击的<strong>关联指令检测</strong>能力。</td>
@@ -184,7 +179,12 @@ s.parentNode.insertBefore(el, s);
     <td>$\le 5\text{ms}$（P95）</td>
     <td>支持<strong>流式处理</strong>，通过<strong>智能缓存机制</strong>和<strong>并行检测引擎</strong>确保实时性。</td>
   </tr>
-</table>| <strong>部署架构</strong> | <strong>透明代理</strong> / <strong>无代码修改</strong> | 快速接入现有应用，支持<strong>审计模式</strong>与<strong>拦截模式</strong>的灵活切换。 |</p>
+  <tr>
+    <td><strong>部署架构</strong></td>
+    <td><strong>透明代理</strong> / <strong>无代码修改</strong></td>
+    <td>快速接入现有应用，支持<strong>审计模式</strong>与<strong>拦截模式</strong>的灵活切换。</td>
+  </tr>
+</table>
 <h3 id="三-ai-focus的鉴冰ai-fence其他安全能力与可复制建议">三、AI-FOCUS的鉴冰AI-FENCE其他安全能力与可复制建议</h3>
 <p>除了核心的提示词攻击防范，鉴冰AI-FENCE还提供了完整的AI安全闭环能力，为企业构建<strong>安全可信</strong>的人工智能服务。</p>
 <p>* <strong>LLM输出安全保护</strong>：实时过滤AI生成内容，防止<strong>PII</strong>（个人身份信息）泄露、<strong>商业机密</strong>外传或生成<strong>违规信息</strong>，支持<strong>敏感信息识别</strong>。
