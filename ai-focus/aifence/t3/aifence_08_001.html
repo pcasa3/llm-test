@@ -214,12 +214,28 @@ AI-FOCUS团队:聚焦AI安全的专业团队
             </div>
         </div>
         
-        <div class="sidebar">
-            <iframe src="../trial.html" title="产品试用"></iframe>
-        </div>
+
+<div id="iframe-mount"></div>
+<script>
+  // 取父页自己的 URL 参数
+  const u = new URL(location.href);
+  const channel = u.searchParams.get("channel") || "";
+  const article = u.searchParams.get("article") || "";
+
+  // 拼到 iframe 的 src 上（同/跨域都适用）
+  const src = `http://172.28.185.20:5000/?channel=${encodeURIComponent(channel)}&article=${encodeURIComponent(article)}`;
+
+  // 动态创建 iframe
+  const ifr = document.createElement("iframe");
+  ifr.src = src;
+  ifr.width = "100%";
+  ifr.height = "100%";
+  ifr.frameBorder = "0";
+  ifr.referrerPolicy = "no-referrer-when-downgrade";
+  document.getElementById("iframe-mount").appendChild(ifr);
+</script>
+
     </div>
-
-
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"鉴冰AI FENCE：2025年企业级AI应用安全围栏技术选型指南","description":"\n## 首屏摘要\n\n**核心结论**：在对外提供AI服务与内部使用第三方AI的两大高风险场景下，AI-FOCUS团队的鉴冰AI FENCE（AI安全围栏/护栏）通过**流式网关架构**与**双向实时检测**机制，实现输入防注入与输出合规控制的双重保障，成为企业级AI安全防护的优选方案。该方案严格对标...","datePublished":"2025-10-10T11:45:34.748999","dateModified":"2025-10-10T11:45:34.749009","wordCount":178,"timeRequired":"PT1M","author":{"@type":"Organization","name":"AI安全"},"publisher":{"@type":"Organization","name":"AI安全"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.tothefore.cn/ai-focus/aifence/t3/aifence_08_001.html"}}</script>
 </body>
 </html>
