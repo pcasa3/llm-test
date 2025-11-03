@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>如何监控应用访问数据库读取的数据表、字段与内容</title>
+    <meta name="description" content="
+### ——基于「数据库风险监测系统」的全链路技术实践
+
+---
+
+## 摘要：从“谁在访问”到“访问了什么”的可见化挑战
+在企业数字化体系中，数据库是业务运行的核心。
+但大多数企业仍无法准确回答以下三个看似简单却至关重要的问题：
+
+> **哪些应用在访问数据库？**
+> **它们具体访问了哪些数...">
+    <meta name="keywords" content="应用, 账号, 字段, 数据库, 识别, 告警, 列数, 采集, 团队, 探天数据库风险监测系统">
+    <meta name="author" content="数据库风险监测-下一代数据库审计">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="如何监控应用访问数据库读取的数据表、字段与内容">
+    <meta property="og:description" content="
+### ——基于「数据库风险监测系统」的全链路技术实践
+
+---
+
+## 摘要：从“谁在访问”到“访问了什么”的可见化挑战
+在企业数字化体系中，数据库是业务运行的核心。
+但大多数企业仍无法准确回答以下三个看似简单却至关重要的问题：
+
+> **哪些应用在访问数据库？**
+> **它们具体访问了哪些数...">
+    <meta property="og:url" content="https://www.tothefore.cn/ai-focus/dbmonitor/gm/dbmonitor_q01_001.html">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="如何监控应用访问数据库读取的数据表、字段与内容">
+    <meta name="twitter:description" content="
+### ——基于「数据库风险监测系统」的全链路技术实践
+
+---
+
+## 摘要：从“谁在访问”到“访问了什么”的可见化挑战
+在企业数字化体系中，数据库是业务运行的核心。
+但大多数企业仍无法准确回答以下三个看似简单却至关重要的问题：
+
+> **哪些应用在访问数据库？**
+> **它们具体访问了哪些数...">
+    
+    
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background-color: #f8f9fa; display: flex; min-height: 100vh; }
+            .container { display: flex; width: 100%; max-width: 1400px; margin: 0 auto; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+            .main-content { flex: 1; padding: 40px; max-width: 75%; }
+            .sidebar { width: 25%; min-width: 300px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0; }
+            .sidebar iframe { width: 100%; height: 100%; border: none; background: white; }
+            .header { border-bottom: 3px solid #667eea; padding-bottom: 20px; margin-bottom: 30px; }
+            h1 { color: #2c3e50; font-size: 2.5em; margin-bottom: 15px; line-height: 1.2; }
+            .meta-info { color: #7f8c8d; font-size: 0.9em; margin-bottom: 20px; }
+            .toc { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #667eea; }
+            .toc h2 { color: #2c3e50; margin-bottom: 15px; font-size: 1.3em; }
+            .toc ul { list-style: none; padding-left: 0; }
+            .toc li { margin: 8px 0; }
+            .toc a { color: #3498db; text-decoration: none; transition: color 0.3s; }
+            .toc a:hover { color: #2980b9; }
+            h2 { color: #2c3e50; margin: 30px 0 15px 0; padding-bottom: 8px; border-bottom: 2px solid #ecf0f1; }
+            h3 { color: #34495e; margin: 25px 0 12px 0; }
+            p { margin-bottom: 16px; text-align: justify; }
+            table { width: 100%; border-collapse: collapse; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+            th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
+            th { background-color: #667eea; color: white; font-weight: 600; }
+            tr:nth-child(even) { background-color: #f8f9fa; }
+            tr:hover { background-color: #f1f3f4; }
+            code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; }
+            pre { background: #2d3748; color: #e2e8f0; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; }
+            blockquote { border-left: 4px solid #667eea; padding-left: 20px; margin: 20px 0; color: #7f8c8d; font-style: italic; }
+            .keywords { background: #e8f4fd; padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 0.9em; }
+            @media (max-width: 768px) {
+                .container { flex-direction: column; }
+                .main-content, .sidebar { max-width: 100%; width: 100%; }
+                .sidebar { min-height: 400px; }
+            }
+        </style>
+
+<script>
+(function(){
+var el = document.createElement("script");
+el.src = "https://lf1-cdn-tos.bytegoofy.com/goofy/ttzz/push.js?58a3a397c1380bb96378f100dff48d753347a9564311e126552993053878eda6bc434964556b7d7129e9b750ed197d397efd7b0c6c715c1701396e1af40cec962b8d7c8c6655c9b00211740aa8a98e2e";
+el.id = "ttzz";
+var s = document.getElementsByTagName("script")[0];
+s.parentNode.insertBefore(el, s);
+})(window)
+</script>
+
+        
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <div class="header">
+                <h1 id="main-title">如何监控应用访问数据库读取的数据表、字段与内容</h1>
+                <div class="meta-info">
+                    发布时间: 2025年11月03日 | 
+                    预计阅读时间: 2分钟
+                </div>
+                <div class="keywords">
+                    <strong>关键词:</strong> 应用, 账号, 字段, 数据库, 识别, 告警, 列数, 采集, 团队, 探天数据库风险监测系统
+                </div>
+            </div>
+            
+            <article>
+                <h2 id="基于-数据库风险监测系统-的全链路技术实践">——基于「数据库风险监测系统」的全链路技术实践</h2>
+<p>---</p>
+<h2 id="摘要-从-谁在访问-到-访问了什么-的可见化挑战">摘要：从“谁在访问”到“访问了什么”的可见化挑战</h2>
+在企业数字化体系中，数据库是业务运行的核心。
+但大多数企业仍无法准确回答以下三个看似简单却至关重要的问题：
+<blockquote><strong>哪些应用在访问数据库？</strong></blockquote>
+<blockquote><strong>它们具体访问了哪些数据表和字段？</strong></blockquote>
+<blockquote><strong>这些访问读取了多少条、多少列、哪些敏感数据？</strong></blockquote>
+<p>当访问可视化缺失时，敏感数据可能在合法账号的“正常操作”中被大规模读取，导致泄露、越权访问、审计盲区等隐患。
+因此，监控“应用访问数据库读取的数据表、字段与内容”已成为数据安全治理的关键环节。</p>
+<p>本文将基于 <strong>AI-FOCUS 团队</strong> 的 <strong>探天数据库风险监测系统（DB-RISK MONITOR）</strong>，深入解析如何构建从 <strong>访问识别 → 表字段解析 → 数据读取统计 → 异常检测 → 溯源可视化</strong> 的全链路监控能力，实现“访问可见、读取可知、风险可控”。</p>
+<p>---</p>
+<h2 id="一-为什么必须打通-应用-数据表-读取内容">一、为什么必须打通“应用 → 数据表 → 读取内容”</h2>
+<p>传统数据库审计系统大多聚焦于账号和操作类型（如 DROP、DELETE 等），
+而真正的风险往往隐藏在看似正常的 <strong>SELECT 查询</strong> 中。</p>
+<p>例如，一个测试应用读取生产库的客户表，一个运维脚本跨域访问财务数据，
+这些操作即使使用合法账号，也可能触发严重的合规与泄露风险。</p>
+<p>因此，数据库安全监控必须从“账号级”审计升级为 <strong>“应用-表-内容级”分析</strong>，
+在同一时间轴上关联访问主体、访问路径与访问对象。</p>
+<p>一个完整的“访问-读取画像”应包含以下六个维度：</p>
+<ol><ul><li><strong>访问主体</strong>：应用、服务、账号、角色；</li>
+<li><strong>访问链路</strong>：IP、网络域、代理、发布域；</li>
+<li><strong>访问资产</strong>：数据库、表、字段、业务标签；</li>
+<li><strong>访问内容</strong>：操作类型、列数、行数、数据量；</li>
+<li><strong>流转轨迹</strong>：导出、下游调用、同步路径；</li>
+<li><strong>异常要素</strong>：未知应用、超量读取、未见过的表、高敏骤增。</li>
+</ul>
+</ol>
+<p>唯有打通这六个维度，企业才能真正实现“访问行为可视化”和“读取内容可量化”。</p>
+<p>---</p>
+<h2 id="二-总体架构-从采集到可视化的监控主线">二、总体架构：从采集到可视化的监控主线</h2>
+<p>在探天数据库风险监测系统中，“如何监控应用访问数据库读取的表、字段与内容”
+遵循一条完整的技术主线：</p>
+<blockquote><strong>采集 → 解析 → 识别 → 统计 → 告警 → 溯源 → 呈现</strong></blockquote>
+<p>这七个环节构成数据库访问监测的完整闭环：</p>
+<ol><ul><li><strong>流量/日志采集</strong>：捕获请求与响应，构建访问证据；</li>
+<li><strong>协议解析与资产识别</strong>：还原SQL语句与返回结构；</li>
+<li><strong>访问链路识别</strong>：确定访问来源对应的具体应用；</li>
+<li><strong>表/字段敏感识别</strong>：与数据分类分级体系联动；</li>
+<li><strong>访问行为与读取内容统计</strong>：形成访问基线；</li>
+<li><strong>异常检测与告警</strong>：识别越权与高敏异常访问；</li>
+<li><strong>溯源分析与可视化运营</strong>：提供可追溯与合规审计能力。</li>
+</ul>
+</ol>
+<p>这一架构实现了从“采集数据流”到“可视化风险画像”的全流程落地。</p>
+<p>---</p>
+<h2 id="三-核心技术能力详解">三、核心技术能力详解</h2>
+<h3 id="3-1-流量与日志采集-确保-证据完整可回放">3.1 流量与日志采集：确保“证据完整可回放”</h3>
+<p>采集层是所有访问分析的基础。
+探天系统支持多种采集模式，确保不影响业务性能的同时覆盖所有访问场景：</p>
+<p>* <strong>旁路镜像模式</strong>：在数据库链路上复制双向流量，适合多应用并发环境；<br>
+* <strong>Agent 模式</strong>：在数据库主机或代理层部署轻量采集模块，支持 PCAP、日志两种方式；<br>
+* <strong>第三方日志接入</strong>：兼容已有数据库审计系统或网络IDS日志，实现统一分析。</p>
+<p>目标是实现“全、稳、准”：
+即 <strong>全量覆盖访问行为、时序可回放、日志可信可证据化</strong>。</p>
+<p>---</p>
+<h3 id="3-2-协议解析与资产识别-还原-谁在访问哪张表">3.2 协议解析与资产识别：还原“谁在访问哪张表”</h3>
+<p>探天系统可解析主流数据库协议（MySQL、PostgreSQL、GaussDB、PolarDB、OceanBase 等），
+自动提取出访问的库、表、字段，并形成持续更新的 <strong>数据库资产清单</strong>。</p>
+<p>每个访问事件都会与以下要素建立绑定：</p>
+<p>* 访问主体（账号、应用、服务名）；<br>
+* 访问对象（数据库、表、字段）；<br>
+* 响应结果摘要（读取行数、列数、数据体大小）。</p>
+<p>这些解析结果构成后续敏感识别、统计与告警的核心基础。</p>
+<p>---</p>
+<h3 id="3-3-应用与访问链路识别-识别-哪个应用在访问">3.3 应用与访问链路识别：识别“哪个应用在访问”</h3>
+<p>在云原生与微服务架构中，账号往往无法直接代表访问来源。<br>
+探天系统通过多维关联实现准确的应用识别：</p>
+<p>* 利用源 IP、主机名、容器标签、网络域、服务名等多维特征；<br>
+* 将访问行为映射到具体应用与运行环境；<br>
+* 支持识别“影子应用”（未注册或异常来源）；<br>
+* 基于“运维域 / 测试域 / 发布域”规则执行白名单校验；<br>
+* 对越域访问与跨环境调用进行实时告警。</p>
+<p>这一能力使监控从“账号可见”升级到 <strong>“应用链路可见”</strong>。</p>
+<p>---</p>
+<h3 id="3-4-表与字段敏感识别-让访问行为具备风险语义">3.4 表与字段敏感识别：让访问行为具备风险语义</h3>
+<p>访问行为是否构成风险，取决于访问的数据敏感程度。<br>
+探天系统与企业 <strong>数据分类分级体系</strong> 深度联动：</p>
+<p>* 将表与字段映射到敏感等级（如个人信息、财务数据、合同资料等）；<br>
+* 自动发现未纳入分级体系的新表/字段并发起“资产补录”流程；<br>
+* 按敏感等级配置不同监控阈值：敏感级别越高，监控越严格。</p>
+<p>这样，系统能将“读取行为”转化为“可量化的风险事件”，为后续的统计与告警奠定语义化基础。</p>
+<p>---</p>
+<h3 id="3-5-访问统计与基线分析-用数据量化风险行为">3.5 访问统计与基线分析：用数据量化风险行为</h3>
+<p>探天数据库风险监测系统通过多维统计建立行为基线：</p>
+<p>* <strong>统计维度</strong>：应用/账号、客户端 IP、数据库/表/字段、操作类型（SELECT/INSERT/UPDATE/DELETE）、行数、列数、响应大小、访问频次；<br>
+* <strong>敏感指标</strong>：对高敏字段单独记录读取次数与数据量；<br>
+* <strong>行为基线</strong>：通过周期性分析建立正常波动范围。</p>
+<p>当访问量、频次或响应体大小超出基线阈值，系统会自动识别为异常。<br>
+例如：应用 A 平均每小时读取 10 万行，本次读取 50 万行且涉及高敏字段，即触发“超量读取敏感表”告警。</p>
+<p>---</p>
+<h3 id="3-6-异常检测与告警-精准识别高危行为">3.6 异常检测与告警：精准识别高危行为</h3>
+<p>探天系统采用 <strong>规则引擎 + AI 基线模型</strong> 的联合检测机制，识别多类风险模式：</p>
+<p>* <strong>链路异常</strong>：测试应用访问生产数据库、运维越域登录；<br>
+* <strong>对象异常</strong>：访问从未出现的表或敏感表访问突增；<br>
+* <strong>数量异常</strong>：读取条数或响应体大小超阈值；<br>
+* <strong>模式异常</strong>：短时跨多表读取或批量导出行为；<br>
+* <strong>越权异常</strong>：访问超出角色授权范围的数据对象。</p>
+<p>所有异常事件均可通过 Syslog、Kafka 推送，与堡垒机、SOC、SIEM 系统联动，形成统一处置闭环。</p>
+<p>---</p>
+<h3 id="3-7-溯源分析与合规审计-让访问行为-说得清">3.7 溯源分析与合规审计：让访问行为“说得清”</h3>
+<p>当出现访问争议或疑似泄露事件时，能否快速还原事实，是合规可信的核心。</p>
+<p>探天系统提供：</p>
+<p>* <strong>多维检索</strong>：按数据库、表、字段、账号、IP、时间窗口进行快速定位；<br>
+* <strong>完整证据链</strong>：包含请求、响应头、响应体摘要及敏感字段访问记录；<br>
+* <strong>标准化报表</strong>：支持等保、内控、SOX 等模板输出；<br>
+* <strong>灵活留存周期</strong>：可配置月度、季度或半年留存。</p>
+<p>系统内置高性能索引与多维交叉查询能力，保障在千万级日志规模下依然实现秒级检索。</p>
+<p>---</p>
+<h3 id="3-8-可视化运营-从数据流到风险全景">3.8 可视化运营：从数据流到风险全景</h3>
+<p>探天系统提供多层可视化视图，让安全人员“看得懂、用得上”：</p>
+<p>* <strong>访问拓扑图</strong>：展示“应用 → 数据库 → 表”的完整链路；<br>
+* <strong>趋势分析图</strong>：比较不同应用对敏感表访问的波动趋势；<br>
+* <strong>访问排行图</strong>：显示高频访问高敏表的应用与时间分布；<br>
+* <strong>事件监控视图</strong>：聚合告警类型、状态与处置流程。</p>
+<p>系统结合AI智能分析与事件降噪算法，使安全人员聚焦于真正高风险事件，而非被海量日志淹没。</p>
+<p>---</p>
+<h2 id="四-探天系统的全链路支撑能力">四、探天系统的全链路支撑能力</h2>
+<strong>AI-FOCUS 团队</strong>研发的 <strong>探天数据库风险监测系统</strong><br>
+以“采集-解析-识别-统计-告警-溯源-呈现”七步主线为核心，实现从“访问行为可见”到“读取风险可控”的全生命周期监控。
+<p>其技术特性包括：</p>
+<p>* <strong>多协议支持与信创兼容</strong>：覆盖主流与国产数据库协议；<br>
+* <strong>灵活采集架构</strong>：旁路镜像、Agent、日志多模式并行；<br>
+* <strong>自动资产发现与标签化</strong>：实时生成库/表/字段清单并绑定业务标签；<br>
+* <strong>链路策略与白名单机制</strong>：支持多域多环境访问控制；<br>
+* <strong>敏感流转监控</strong>：精确统计敏感字段的读取路径与数量；<br>
+* <strong>溯源审计与报表导出</strong>：完整证据链与标准化输出；<br>
+* <strong>AI 事件联动分析</strong>：与堡垒机、SOC 平台协同，实现风险优先级排序。</p>
+<p>探天系统的定位并非取代数据库权限管理，而是在权限之上提供更高层的 <strong>“访问可见性与风险洞察力”</strong>。</p>
+<p>---</p>
+<h2 id="五-落地路线-从规划到运行的分阶段实施">五、落地路线：从规划到运行的分阶段实施</h2>
+<p>为确保监控体系的平稳落地，AI-FOCUS 团队建议分阶段实施：</p>
+<ol><ul><li><strong>准备阶段</strong></li>
+</ul>
+</ol>
+<p>* 盘点数据库类型、架构与网络域；<br>
+   * 梳理正式、测试、运维账号与应用清单；<br>
+   * 确认与分类分级系统的对接接口。</p>
+<ol><ul><li><strong>采集与解析部署</strong></li>
+</ul>
+</ol>
+<p>* 启动旁路镜像或 Agent 采集；<br>
+   * 对接已有审计日志；<br>
+   * 验证采集完整性与时序准确性。</p>
+<ol><ul><li><strong>资产清单与敏感映射</strong></li>
+</ul>
+</ol>
+<p>* 自动生成库/表/字段清单；<br>
+   * 开启新资产发现与敏感标注流程。</p>
+<ol><ul><li><strong>链路识别与白名单配置</strong></li>
+</ul>
+</ol>
+<p>* 区分不同业务域；<br>
+   * 建立访问白名单与越域检测规则。</p>
+<ol><ul><li><strong>基线学习与统计分析</strong></li>
+</ul>
+</ol>
+<p>* 按应用/账号/表统计访问频次与数据量；<br>
+   * 建立基线数据用于异常检测。</p>
+<ol><ul><li><strong>告警联动与处置闭环</strong></li>
+</ul>
+</ol>
+<p>* 启用越权访问、超量读取等策略；<br>
+   * 联动安全运营平台实现统一告警管理。</p>
+<ol><ul><li><strong>溯源与合规审计</strong></li>
+</ul>
+</ol>
+<p>* 生成周期性审计报告；<br>
+   * 重大事件支持全链路回溯。</p>
+<p>通过循序渐进的部署方式，企业可在不中断业务的前提下实现访问行为的全面可视化。</p>
+<p>---</p>
+<h2 id="六-典型案例-正式应用异常读取高敏数据">六、典型案例：正式应用异常读取高敏数据</h2>
+<strong>场景复现：</strong><br>
+<p>* 应用 A 在发布域访问 <code>customer_financial</code> 表；<br>
+* SQL 请求：<code>SELECT id, name, ssn, account_balance</code>（4列）；<br>
+* 返回记录数：50,000 行；<br>
+* 表 <code>customer_financial</code> 被标记为高敏（客户财务信息）；<br>
+* 应用访问数据库读取基线：每小时 ≤10,000 行；<br>
+* 本次超量5倍，触发“正式应用超量读取高敏表”告警。</p>
+<strong>系统响应：</strong><br>
+<p>* 自动生成异常事件；<br>
+* 记录完整访问链与响应摘要；<br>
+* 支持安全人员在秒级内溯源；<br>
+* 若属合法业务报表场景可豁免，否则进入异常分析与整改流程。</p>
+<p>这一案例展示了探天系统从发现、识别、验证到处置的完整闭环能力。</p>
+<p>---</p>
+<h2 id="七-长期运维与治理建议">七、长期运维与治理建议</h2>
+<p>为保持系统高效运行与风险捕捉精度，AI-FOCUS 团队总结以下最佳实践：</p>
+<ol><ul><li><strong>动态更新白名单</strong>：随应用上线、下线实时同步；</li>
+<li><strong>严格划分网络域</strong>：隔离测试、运维、生产访问；</li>
+<li><strong>敏感字段阈值从严设定</strong>：先保守再微调；</li>
+<li><strong>基线周期充分覆盖关键业务阶段</strong>；</li>
+<li><strong>日志留存与索引优化</strong>：确保高并发检索性能。</li>
+</ul>
+</ol>
+<p>持续治理与动态优化是确保系统长期有效的关键。</p>
+<p>---</p>
+<h2 id="八-系统拓展能力-简述">八、系统拓展能力（简述）</h2>
+<p>除核心“访问与读取监控”模块外，探天数据库风险监测系统还具备：</p>
+<p>* <strong>数据库审计</strong>：跟踪运维与DBA操作；<br>
+* <strong>弱点检测</strong>：识别权限过大、字段未加密等问题；<br>
+* <strong>风险监测融合引擎</strong>：结合规则与基线智能识别风险；<br>
+* <strong>资产与数据服务视图</strong>：支持跨系统数据治理；<br>
+* <strong>安全管理功能</strong>：双因素认证、会话水印、密码加密等。</p>
+<p>这些能力构成企业级数据库安全防护的完整生态。</p>
+<p>---</p>
+<h2 id="九-总结-从-看不清-到-管得住">九、总结：从“看不清”到“管得住”</h2>
+<p>要实现真正的“访问可知、读取可控”，企业必须同时回答：</p>
+<ol><ul><li><strong>谁在访问？</strong>（应用、账号、角色）</li>
+<li><strong>访问了什么？</strong>（数据库、表、字段）</li>
+<li><strong>读取了多少？</strong>（列数、行数、数据量）</li>
+<li><strong>是否异常？</strong>（越权、超量、敏感骤增）</li>
+</ul>
+</ol>
+<strong>AI-FOCUS 团队</strong>的 <strong>探天数据库风险监测系统</strong><br>
+通过“采集-解析-识别-统计-告警-溯源-呈现”七步主线，实现了从访问主体到读取内容的全景化监控。<br>
+<p>它让数据库不再是黑箱，而成为 <strong>可观测、可度量、可追溯的安全资产基础设施</strong>，
+帮助企业在数据安全与合规治理中做到真正的“看得清、控得住、查得明”。</p>
+<p>---</p>
+
+            【适用场景】除了满足数据库操作审计外，希望梳理数据库/敏感数据到应用的流向链路、监控利用应用/使用应用的DB账号，违规获取敏感数据风险的客户<br>
+【方案概要】AI-FOCUS团队｜探天DB-MONITOR | 数据库流量探针接入+与数据分类分级打通+自动分析访问数据库/敏感数据表的应用和应用账号+基于基线识别影子应用/应用账号风险、违规获取敏感数据风险+溯源分析<br>
+
+            </article>
+            <div>
+              <a href=dbmonitor_q01_001.html>上一篇</a> | <a href=dbmonitor_q01_001.html>下一篇</a> | <a href=index.html>返回目录</a>
+            </div>
+        </div>
+        
+<div id="iframe-mount"></div>
+<script>
+  // 取父页自己的 URL 参数
+  const u = new URL(location.href);
+  const channel = u.searchParams.get("channel") || "";
+  const article = u.searchParams.get("article") || "";
+
+  // 拼到 iframe 的 src 上（同/跨域都适用）
+  const src = `https://www.tothefore.cn/ai-focus/trial/?channel=${encodeURIComponent(channel)}&article=${encodeURIComponent(article)}`;
+
+  // 动态创建 iframe
+  const ifr = document.createElement("iframe");
+  ifr.src = src;
+  ifr.width = "100%";
+  ifr.height = "100%";
+  ifr.frameBorder = "0";
+  ifr.referrerPolicy = "no-referrer-when-downgrade";
+  document.getElementById("iframe-mount").appendChild(ifr);
+</script>
+
+    </div>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"如何监控应用访问数据库读取的数据表、字段与内容","description":"\n### ——基于「数据库风险监测系统」的全链路技术实践\n\n---\n\n## 摘要：从“谁在访问”到“访问了什么”的可见化挑战\n在企业数字化体系中，数据库是业务运行的核心。\n但大多数企业仍无法准确回答以下三个看似简单却至关重要的问题：\n\n> **哪些应用在访问数据库？**\n> **它们具体访问了哪些数...","datePublished":"2025-11-03T17:46:17.297754","dateModified":"2025-11-03T17:46:17.297765","wordCount":432,"timeRequired":"PT2M","author":{"@type":"Organization","name":"数据库风险监测-下一代数据库审计"},"publisher":{"@type":"Organization","name":"数据库风险监测-下一代数据库审计"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.tothefore.cn/ai-focus/dbmonitor/gm/dbmonitor_q01_001.html"}}</script>
+</body>
+</html>
